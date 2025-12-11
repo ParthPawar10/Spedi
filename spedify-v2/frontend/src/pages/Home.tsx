@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, TrendingDown, Clock, Shield, Zap, BarChart3, Heart, Bell } from 'lucide-react';
+import { Search, TrendingDown, Shield, Zap, BarChart3, Heart, Bell } from 'lucide-react';
 import ParticleBackground from '../components/ParticleBackground';
 
 const Home: React.FC = () => {
