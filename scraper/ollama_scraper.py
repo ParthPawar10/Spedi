@@ -49,8 +49,9 @@ class OllamaBuyHatkeScraper:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Connection': 'keep-alive'
+            'Accept-Language': 'en-IN,en;q=0.9,hi;q=0.8',  # Indian language preference
+            'Connection': 'keep-alive',
+            'X-Forwarded-For': '103.21.58.1'
         }
         
         os.makedirs(self.output_dir, exist_ok=True)
