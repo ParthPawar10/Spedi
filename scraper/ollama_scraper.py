@@ -45,13 +45,18 @@ class OllamaBuyHatkeScraper:
             self.groq_client = None
             print("⚠️ No Groq API key found. Set GROQ_API_KEY environment variable or pass groq_api_key parameter.")
             print("   Get your free API key at: https://console.groq.com/keys")
+        # Configure proxy for Indian IP (optional - set via environment variable)
+        self.proxy = os.getenv('PROXY_URL')  # e.g., 'http://user:pass@proxy.com:port'
         
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-IN,en;q=0.9,hi;q=0.8',  # Indian language preference
+            'Accept-Language': 'en-IN,en;q=0.9,hi;q=0.8',
             'Connection': 'keep-alive',
-            'X-Forwarded-For': '103.21.58.1'
+            'X-Forwarded-For': '103.21.58.1',
+            'CF-IPCountry': 'IN',  # CloudFlare country hint
+            'X-Real-IP': '103.21.58.1',  # Real IP hint
+            'True-Client-IP': '103.21.58.1'  # Another IP header
         }
         
         os.makedirs(self.output_dir, exist_ok=True)
