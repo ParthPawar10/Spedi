@@ -45,8 +45,13 @@ class OllamaBuyHatkeScraper:
             self.groq_client = None
             print("⚠️ No Groq API key found. Set GROQ_API_KEY environment variable or pass groq_api_key parameter.")
             print("   Get your free API key at: https://console.groq.com/keys")
+        
         # Configure proxy for Indian IP (optional - set via environment variable)
         self.proxy = os.getenv('PROXY_URL')  # e.g., 'http://user:pass@proxy.com:port'
+        
+        # Currency detection - default to INR, will auto-detect from scraped data
+        self.currency = os.getenv('CURRENCY', 'INR')  # INR or SGD
+        self.currency_symbol = '₹' if self.currency == 'INR' else 'S$'
         
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -63,6 +68,11 @@ class OllamaBuyHatkeScraper:
         
         # Initialize price history extractor
         self.price_history_extractor = PriceHistoryExtractor()
+        
+        if self.proxy:
+            print(f"🌐 Using proxy for Indian IP routing")
+        
+        print(f"💱 Currency: {self.currency} ({self.currency_symbol})")
 
     def find_real_buyhatke_url(self, product_name):
         """
@@ -88,7 +98,8 @@ class OllamaBuyHatkeScraper:
             for url in search_urls:
                 try:
                     print(f"🔍 Trying search URL: {url}")
-                    response = requests.get(url, headers=self.headers, timeout=30)
+                    proxies = {'http': self.proxy, 'https': self.proxy} if self.proxy else None
+                    response = requests.get(url, headers=self.headers, proxies=proxies, timeout=30)
                     if response.status_code == 200 and len(response.text) > 1000:
                         search_url = url
                         break
@@ -501,9 +512,10 @@ class OllamaBuyHatkeScraper:
                     "product_name": product_name,
                     "price_comparison": all_prices,
                     "total_platforms": len(all_prices),
-                    "lowest_price": f"₹{min(prices):,.0f}" if prices else "N/A",
-                    "highest_price": f"₹{max(prices):,.0f}" if prices else "N/A", 
+                    "lowest_price": f"{self.currency_symbol}{min(prices):,.0f}" if prices else "N/A",
+                    "highest_price": f"{self.currency_symbol}{max(prices):,.0f}" if prices else "N/A", 
                     "current_price": all_prices[0].get('price', 'N/A') if all_prices else "N/A",
+                    "currency": self.currency,
                     "extracted_from": "enhanced_buyhatke_product_page",
                     "source_url": url,
                     "timestamp": datetime.now().isoformat()
