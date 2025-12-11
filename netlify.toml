@@ -1,0 +1,9 @@
+[build]
+  base = "spedify-v2/frontend"
+  command = "npm run build"
+  publish = "spedify-v2/frontend/dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
